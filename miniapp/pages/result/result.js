@@ -46,7 +46,7 @@ Page({
 
       this.setData({
         pollCount,
-        progressMessage: pollCount < 3 ? '正在加载结果...' : '仍在处理中，请耐心等待...'
+        progressMessage: pollCount < 3 ? '正在连接服务...' : pollCount < 8 ? '正在分析数据...' : '正在生成报告...'
       });
 
       api.getTaskStatus(taskId)
@@ -61,6 +61,9 @@ Page({
               richNodes
             });
 
+            // 成功震动反馈
+            wx.vibrateShort({ type: 'medium' });
+
             // 更新历史记录
             this.updateHistory(taskId, 'completed', resultText);
           } else if (task.status === 'failed') {
@@ -68,6 +71,7 @@ Page({
               loading: false,
               error: task.error || '任务处理失败'
             });
+            wx.vibrateShort({ type: 'heavy' });
             this.updateHistory(taskId, 'failed');
           } else {
             // 继续轮询
@@ -76,7 +80,6 @@ Page({
         })
         .catch((err) => {
           if (pollCount < api.MAX_POLL_COUNT) {
-            // 网络错误继续重试
             setTimeout(poll, 5000);
           } else {
             this.setData({
@@ -99,7 +102,6 @@ Page({
         history[index].status = status;
         history[index].completeTime = Date.now();
         if (result) {
-          // 只保存前500字符作为预览
           history[index].preview = result.substring(0, 500);
         }
         wx.setStorageSync('task_history', history);
@@ -128,11 +130,28 @@ Page({
     wx.setClipboardData({
       data: this.data.result,
       success: () => {
+        wx.vibrateShort({ type: 'light' });
         wx.showToast({
           title: '已复制到剪贴板',
           icon: 'success'
         });
       }
+    });
+  },
+
+  // 分享结果
+  shareResult() {
+    // 触发微信分享
+    wx.vibrateShort({ type: 'light' });
+  },
+
+  // 导出 PDF（预留功能）
+  exportPDF() {
+    wx.vibrateShort({ type: 'light' });
+    wx.showToast({
+      title: '导出功能即将上线',
+      icon: 'none',
+      duration: 2000
     });
   },
 

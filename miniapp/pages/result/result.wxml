@@ -1,10 +1,34 @@
 <!--pages/result/result.wxml-->
-<!-- 银行业务助手 - 结果展示页（支持 Markdown 渲染） -->
-<view class="container">
+<!-- 银行业务助手 - 结果展示页（高端金融风格） -->
+<view class="container page-enter">
   <!-- 加载状态 -->
-  <view class="card" wx:if="{{loading}}">
+  <view class="loading-card" wx:if="{{loading}}">
+    <!-- 步骤指示器 -->
+    <view class="step-indicator">
+      <view class="step-item">
+        <view class="step-dot active {{pollCount > 3 ? 'completed' : ''}}">
+          <view class="step-dot-inner"></view>
+        </view>
+        <text class="step-label active">连接</text>
+      </view>
+      <view class="step-line {{pollCount > 3 ? 'active' : ''}}"></view>
+      <view class="step-item">
+        <view class="step-dot {{pollCount > 3 ? 'active' : ''}} {{pollCount > 8 ? 'completed' : ''}}">
+          <view class="step-dot-inner"></view>
+        </view>
+        <text class="step-label {{pollCount > 3 ? 'active' : ''}}">分析</text>
+      </view>
+      <view class="step-line {{pollCount > 8 ? 'active' : ''}}"></view>
+      <view class="step-item">
+        <view class="step-dot {{pollCount > 8 ? 'active' : ''}}">
+          <view class="step-dot-inner"></view>
+        </view>
+        <text class="step-label {{pollCount > 8 ? 'active' : ''}}">完成</text>
+      </view>
+    </view>
+
     <view class="loading-animation">
-      <view class="loading-spinner"></view>
+      <view class="loading-ripple"></view>
       <view class="loading-text">{{progressMessage}}</view>
       <view class="loading-progress">{{pollCount}}/{{maxPollCount}}</view>
       <view class="progress-bar">
@@ -13,47 +37,83 @@
     </view>
   </view>
 
-  <!-- 错误状态（含重试） -->
-  <view class="card" wx:elif="{{error}}">
-    <view class="error-section">
-      <view class="error-icon-large">⚠️</view>
-      <view class="error-message">{{error}}</view>
-      <button class="button-retry" bindtap="retryLoad">重新加载</button>
+  <!-- 错误状态 -->
+  <view class="error-card-result" wx:elif="{{error}}">
+    <view class="error-icon-area">
+      <view class="error-icon-circle-lg">
+        <view class="error-x-mark-lg"></view>
+      </view>
     </view>
+    <view class="error-title">加载失败</view>
+    <view class="error-message">{{error}}</view>
+    <button class="retry-btn-result" bindtap="retryLoad">
+      <text>重新加载</text>
+    </button>
   </view>
 
   <!-- 结果内容 -->
-  <view wx:else>
+  <view wx:else class="result-content">
+    <!-- 成功状态栏 -->
+    <view class="success-banner">
+      <view class="success-bg"></view>
+      <view class="success-content">
+        <view class="success-icon-wrap">
+          <view class="success-check"></view>
+        </view>
+        <view class="success-info">
+          <view class="success-title">分析完成</view>
+          <view class="success-subtitle">报告已生成，可复制或分享</view>
+        </view>
+      </view>
+    </view>
+
     <!-- 任务信息 -->
-    <view class="card result-header">
-      <view class="result-title">分析报告</view>
-      <view class="result-meta">
-        <text class="meta-item">任务ID: {{taskId}}</text>
+    <view class="result-meta-bar">
+      <view class="meta-chip">
+        <view class="meta-dot"></view>
+        <text>任务 {{taskId}}</text>
       </view>
     </view>
 
-    <!-- Markdown 渲染内容 -->
-    <view class="card result-body">
-      <rich-text nodes="{{richNodes}}" wx:if="{{richNodes.length > 0}}"></rich-text>
-      <view wx:else class="plain-text">
-        <text>{{result}}</text>
+    <!-- 报告内容区域 -->
+    <view class="report-card">
+      <view class="report-decoration"></view>
+      <view class="report-content">
+        <rich-text nodes="{{richNodes}}" wx:if="{{richNodes.length > 0}}"></rich-text>
+        <view wx:else class="plain-text">
+          <text>{{result}}</text>
+        </view>
       </view>
     </view>
 
-    <!-- 操作按钮 -->
-    <view class="actions-bar">
-      <button class="action-btn copy-btn" bindtap="copyResult">
-        <text class="action-icon">📋</text>
-        <text>复制</text>
-      </button>
-      <button class="action-btn share-btn" open-type="share">
-        <text class="action-icon">📤</text>
-        <text>分享</text>
-      </button>
-      <button class="action-btn back-btn" bindtap="backToHome">
-        <text class="action-icon">🏠</text>
-        <text>首页</text>
-      </button>
+    <!-- 底部固定操作栏 -->
+    <view class="fixed-actions-bar">
+      <view class="actions-inner">
+        <view class="action-item" bindtap="copyResult">
+          <view class="action-icon-wrap copy-icon-wrap">
+            <view class="copy-icon-css"></view>
+          </view>
+          <text class="action-label">复制</text>
+        </view>
+        <view class="action-item" bindtap="shareResult">
+          <view class="action-icon-wrap share-icon-wrap">
+            <view class="share-icon-css"></view>
+          </view>
+          <text class="action-label">分享</text>
+        </view>
+        <view class="action-item" bindtap="exportPDF">
+          <view class="action-icon-wrap export-icon-wrap">
+            <view class="export-icon-css"></view>
+          </view>
+          <text class="action-label">导出</text>
+        </view>
+        <view class="action-item" bindtap="backToHome">
+          <view class="action-icon-wrap home-icon-wrap">
+            <view class="home-icon-css"></view>
+          </view>
+          <text class="action-label">首页</text>
+        </view>
+      </view>
     </view>
   </view>
 </view>

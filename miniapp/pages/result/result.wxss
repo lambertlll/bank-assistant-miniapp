@@ -1,123 +1,376 @@
 /* pages/result/result.wxss */
-/* 银行业务助手 - 结果页样式 */
+/* 银行业务助手 - 结果页高端金融风格 */
 
-/* 结果头部 */
-.result-header {
-  border-left: 8rpx solid #1a3a5c;
+/* 加载卡片 */
+.loading-card {
+  background: var(--color-card);
+  border-radius: var(--radius-lg);
+  padding: 48rpx 36rpx;
+  box-shadow: var(--shadow-md);
 }
 
-.result-title {
-  font-size: 36rpx;
-  font-weight: 700;
-  color: #1a3a5c;
-  margin-bottom: 12rpx;
+/* ===== 成功状态栏 ===== */
+.success-banner {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 20rpx;
+  padding: 32rpx 36rpx;
 }
 
-.result-meta {
+.success-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #1a6b3f 0%, #2e8b57 50%, #3da06a 100%);
+}
+
+.success-content {
+  position: relative;
+  z-index: 1;
   display: flex;
+  align-items: center;
   gap: 24rpx;
 }
 
-.meta-item {
-  font-size: 22rpx;
-  color: #8fa8c0;
-  background: #f0f4f8;
-  padding: 6rpx 16rpx;
-  border-radius: 6rpx;
+.success-icon-wrap {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
-/* 结果内容 */
-.result-body {
+.success-check {
+  width: 24rpx;
+  height: 14rpx;
+  border-left: 4rpx solid #fff;
+  border-bottom: 4rpx solid #fff;
+  transform: rotate(-45deg);
+  margin-top: -4rpx;
+}
+
+.success-info {
+  flex: 1;
+}
+
+.success-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4rpx;
+}
+
+.success-subtitle {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ===== 任务元信息 ===== */
+.result-meta-bar {
+  margin-bottom: 20rpx;
+  padding: 0 4rpx;
+}
+
+.meta-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  font-size: 22rpx;
+  color: var(--color-text-muted);
+  background: var(--color-card);
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  box-shadow: var(--shadow-sm);
+}
+
+.meta-dot {
+  width: 8rpx;
+  height: 8rpx;
+  border-radius: 50%;
+  background: var(--color-gold);
+}
+
+/* ===== 报告卡片 ===== */
+.report-card {
+  background: var(--color-card);
+  border-radius: var(--radius-lg);
+  padding: 36rpx;
+  padding-left: 48rpx;
+  margin-bottom: 160rpx;
+  box-shadow: var(--shadow-md);
+  position: relative;
   min-height: 300rpx;
+}
+
+.report-decoration {
+  position: absolute;
+  top: 36rpx;
+  left: 20rpx;
+  bottom: 36rpx;
+  width: 4rpx;
+  background: linear-gradient(180deg, var(--color-gold), var(--color-gold-light), transparent);
+  border-radius: 2rpx;
+}
+
+.report-content {
+  position: relative;
 }
 
 .plain-text {
   font-size: 28rpx;
-  line-height: 1.8;
-  color: #333;
+  line-height: 2;
+  color: var(--color-text);
   white-space: pre-wrap;
   word-break: break-all;
 }
 
-/* 操作按钮栏 */
-.actions-bar {
-  display: flex;
-  gap: 16rpx;
-  margin-top: 24rpx;
-  padding: 0 8rpx;
+/* ===== 固定底部操作栏 ===== */
+.fixed-actions-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--color-card);
+  padding: 20rpx 32rpx;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  box-shadow: 0 -4rpx 20rpx rgba(13, 33, 55, 0.06);
+  z-index: 100;
 }
 
-.action-btn {
-  flex: 1;
+.actions-inner {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.action-item {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  gap: 6rpx;
+  padding: 8rpx 24rpx;
+  transition: all 0.2s;
+}
+
+.action-item:active {
+  transform: scale(0.9);
+}
+
+.action-icon-wrap {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24rpx 16rpx;
-  border-radius: 16rpx;
-  font-size: 24rpx;
-  background: #fff;
-  box-shadow: 0 4rpx 12rpx rgba(26, 58, 92, 0.06);
-  border: none;
-  line-height: 1.4;
 }
 
-.action-btn::after {
-  border: none;
+.copy-icon-wrap { background: rgba(13, 33, 55, 0.06); }
+.share-icon-wrap { background: rgba(201, 169, 110, 0.1); }
+.export-icon-wrap { background: rgba(46, 139, 87, 0.08); }
+.home-icon-wrap { background: rgba(107, 124, 141, 0.08); }
+
+/* CSS 图标 - 复制 */
+.copy-icon-css {
+  width: 22rpx;
+  height: 26rpx;
+  border: 3rpx solid var(--color-primary);
+  border-radius: 3rpx;
+  position: relative;
 }
 
-.action-icon {
-  font-size: 40rpx;
-  margin-bottom: 8rpx;
+.copy-icon-css::after {
+  content: '';
+  position: absolute;
+  top: -6rpx;
+  left: -6rpx;
+  width: 22rpx;
+  height: 26rpx;
+  border: 3rpx solid var(--color-primary);
+  border-radius: 3rpx;
+  background: var(--color-card);
 }
 
-.copy-btn {
-  color: #1a3a5c;
+/* CSS 图标 - 分享 */
+.share-icon-css {
+  width: 24rpx;
+  height: 24rpx;
+  position: relative;
 }
 
-.share-btn {
-  color: #2d6aa0;
+.share-icon-css::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4rpx;
+  height: 16rpx;
+  background: var(--color-gold);
+  border-radius: 2rpx;
 }
 
-.back-btn {
-  color: #5a7a9a;
+.share-icon-css::after {
+  content: '';
+  position: absolute;
+  top: -2rpx;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 12rpx;
+  height: 12rpx;
+  border-top: 3rpx solid var(--color-gold);
+  border-right: 3rpx solid var(--color-gold);
 }
 
-.action-btn:active {
-  background: #f0f4f8;
-  transform: scale(0.96);
+/* CSS 图标 - 导出 */
+.export-icon-css {
+  width: 20rpx;
+  height: 24rpx;
+  border: 3rpx solid var(--color-success);
+  border-radius: 3rpx;
+  position: relative;
 }
 
-/* 错误区域 */
-.error-section {
+.export-icon-css::before {
+  content: '';
+  position: absolute;
+  top: 4rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4rpx;
+  height: 10rpx;
+  background: var(--color-success);
+}
+
+.export-icon-css::after {
+  content: '';
+  position: absolute;
+  bottom: 2rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12rpx;
+  height: 3rpx;
+  background: var(--color-success);
+  border-radius: 1rpx;
+}
+
+/* CSS 图标 - 首页 */
+.home-icon-css {
+  width: 24rpx;
+  height: 24rpx;
+  position: relative;
+}
+
+.home-icon-css::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 14rpx solid transparent;
+  border-right: 14rpx solid transparent;
+  border-bottom: 12rpx solid var(--color-text-secondary);
+}
+
+.home-icon-css::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18rpx;
+  height: 14rpx;
+  background: var(--color-text-secondary);
+  border-radius: 2rpx;
+}
+
+.action-label {
+  font-size: 20rpx;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+/* ===== 错误卡片 ===== */
+.error-card-result {
+  background: var(--color-card);
+  border-radius: var(--radius-lg);
+  padding: 60rpx 40rpx;
+  box-shadow: var(--shadow-md);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40rpx;
+  text-align: center;
 }
 
-.error-icon-large {
-  font-size: 80rpx;
-  margin-bottom: 24rpx;
+.error-icon-area {
+  margin-bottom: 28rpx;
+}
+
+.error-icon-circle-lg {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  background: rgba(192, 57, 43, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-x-mark-lg {
+  width: 36rpx;
+  height: 36rpx;
+  position: relative;
+}
+
+.error-x-mark-lg::before,
+.error-x-mark-lg::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30rpx;
+  height: 5rpx;
+  background: var(--color-error);
+  border-radius: 3rpx;
+}
+
+.error-x-mark-lg::before { transform: translate(-50%, -50%) rotate(45deg); }
+.error-x-mark-lg::after { transform: translate(-50%, -50%) rotate(-45deg); }
+
+.error-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 12rpx;
 }
 
 .error-message {
-  font-size: 28rpx;
-  color: #d32f2f;
-  text-align: center;
-  margin-bottom: 32rpx;
+  font-size: 26rpx;
+  color: var(--color-text-secondary);
   line-height: 1.6;
+  margin-bottom: 36rpx;
+  max-width: 500rpx;
 }
 
-.button-retry {
-  background: #fff;
-  color: #d32f2f;
-  border: 2rpx solid #d32f2f;
-  border-radius: 12rpx;
-  padding: 16rpx 48rpx;
+.retry-btn-result {
+  background: transparent;
+  color: var(--color-primary);
+  border: 2rpx solid var(--color-primary);
+  border-radius: 40rpx;
+  padding: 20rpx 64rpx;
   font-size: 28rpx;
+  font-weight: 500;
 }
 
-.button-retry:active {
-  background: #fef0f0;
+.retry-btn-result:active {
+  background: rgba(13, 33, 55, 0.04);
+  transform: scale(0.96);
 }

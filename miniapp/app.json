@@ -1,15 +1,35 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/result/result",
-    "pages/history/history"
+    "pages/history/history",
+    "pages/result/result"
   ],
   "window": {
     "backgroundTextStyle": "dark",
-    "navigationBarBackgroundColor": "#1a3a5c",
+    "navigationBarBackgroundColor": "#0d2137",
     "navigationBarTitleText": "银行业务助手",
     "navigationBarTextStyle": "white",
     "enablePullDownRefresh": false
+  },
+  "tabBar": {
+    "color": "#8fa8c0",
+    "selectedColor": "#c9a96e",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/tab_home.png",
+        "selectedIconPath": "images/tab_home_active.png"
+      },
+      {
+        "pagePath": "pages/history/history",
+        "text": "历史记录",
+        "iconPath": "images/tab_history.png",
+        "selectedIconPath": "images/tab_history_active.png"
+      }
+    ]
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json"

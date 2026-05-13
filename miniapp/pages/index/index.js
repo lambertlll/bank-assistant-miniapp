@@ -3,9 +3,16 @@
 
 const api = require('../../utils/api.js');
 
+const FUNCTION_NAMES = {
+  'client-research': '客户尽调',
+  'financial-report': '财报分析',
+  'credit-committee': '审贷会助手'
+};
+
 Page({
   data: {
     selectedFunction: '',
+    selectedFunctionName: '',
     clientName: '',
     clientType: 'enterprise',
     companyName: '',
@@ -23,11 +30,15 @@ Page({
     pollCount: 0,
     maxPollCount: api.MAX_POLL_COUNT,
     remainingTime: '约5分钟',
+    currentStep: 0,
     // 邀请码相关
     showInviteModal: false,
     inviteCode: '',
     inviteError: '',
-    isVerified: false
+    isVerified: false,
+    // 输入焦点
+    clientNameFocus: false,
+    companyNameFocus: false
   },
 
   onLoad() {
@@ -70,8 +81,10 @@ Page({
           app.setVerified();
           this.setData({ isVerified: true, showInviteModal: false, inviteError: '' });
           wx.showToast({ title: '验证成功', icon: 'success' });
+          wx.vibrateShort({ type: 'medium' });
         } else {
           this.setData({ inviteError: '邀请码无效，请重新输入' });
+          wx.vibrateShort({ type: 'heavy' });
         }
       })
       .catch((err) => {
@@ -103,8 +116,10 @@ Page({
     const func = e.currentTarget.dataset.function;
     this.setData({
       selectedFunction: func,
+      selectedFunctionName: FUNCTION_NAMES[func] || '',
       error: ''
     });
+    wx.vibrateShort({ type: 'light' });
   },
 
   // 输入框变化
@@ -115,13 +130,30 @@ Page({
     });
   },
 
-  // 单选框变化（使用 radio-group 的 bindchange）
+  // 输入框焦点
+  onInputFocus(e) {
+    const focusField = e.currentTarget.dataset.focus;
+    this.setData({ [focusField]: true });
+  },
+
+  onInputBlur(e) {
+    const focusField = e.currentTarget.dataset.focus;
+    this.setData({ [focusField]: false });
+  },
+
+  // 选项卡片点击（替代 radio）
+  onOptionSelect(e) {
+    const field = e.currentTarget.dataset.field;
+    const value = e.currentTarget.dataset.value;
+    this.setData({ [field]: value });
+    wx.vibrateShort({ type: 'light' });
+  },
+
+  // 单选框变化（保留兼容）
   onRadioChange(e) {
     const field = e.currentTarget.dataset.field;
     const value = e.detail.value;
-    this.setData({
-      [field]: value
-    });
+    this.setData({ [field]: value });
   },
 
   // 计算剩余时间
@@ -133,6 +165,14 @@ Page({
     return `约${remaining}秒`;
   },
 
+  // 计算当前步骤
+  calcCurrentStep(pollCount) {
+    const max = api.MAX_POLL_COUNT;
+    if (pollCount < max * 0.2) return 1;
+    if (pollCount < max * 0.7) return 2;
+    return 3;
+  },
+
   // 提交任务
   submit() {
     const { selectedFunction, clientName, clientType, companyName, reportType, outputFormat } = this.data;
@@ -140,10 +180,12 @@ Page({
     // 验证输入
     if (selectedFunction === 'client-research' && !clientName.trim()) {
       this.setData({ error: '请输入客户名称' });
+      wx.vibrateShort({ type: 'heavy' });
       return;
     }
     if ((selectedFunction === 'financial-report' || selectedFunction === 'credit-committee') && !companyName.trim()) {
       this.setData({ error: '请输入公司名称' });
+      wx.vibrateShort({ type: 'heavy' });
       return;
     }
 
@@ -171,8 +213,11 @@ Page({
       loading: true,
       error: '',
       progressMessage: '正在创建任务...',
-      pollCount: 0
+      pollCount: 0,
+      currentStep: 1
     });
+
+    wx.vibrateShort({ type: 'medium' });
 
     // 创建任务
     api.createTask(endpoint, data)
@@ -192,15 +237,19 @@ Page({
           this.setData({
             progressMessage: message,
             pollCount: count,
-            remainingTime: this.calcRemainingTime(count)
+            remainingTime: this.calcRemainingTime(count),
+            currentStep: this.calcCurrentStep(count)
           });
         });
       })
       .then((task) => {
-        this.setData({ loading: false });
+        this.setData({ loading: false, currentStep: 3 });
 
         // 更新历史记录状态
         this.updateHistoryStatus(task.taskId, 'completed');
+
+        // 成功震动反馈
+        wx.vibrateShort({ type: 'medium' });
 
         // 跳转到结果页
         wx.navigateTo({
@@ -210,8 +259,10 @@ Page({
       .catch((err) => {
         this.setData({
           loading: false,
+          currentStep: 0,
           error: err.message || '处理失败，请重试'
         });
+        wx.vibrateShort({ type: 'heavy' });
       });
   },
 
@@ -226,7 +277,6 @@ Page({
     try {
       const history = wx.getStorageSync('task_history') || [];
       history.unshift(record);
-      // 最多保留50条
       if (history.length > 50) {
         history.pop();
       }
@@ -253,7 +303,7 @@ Page({
 
   // 跳转到历史记录
   goToHistory() {
-    wx.navigateTo({
+    wx.switchTab({
       url: '/pages/history/history'
     });
   },

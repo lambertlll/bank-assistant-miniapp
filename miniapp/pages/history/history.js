@@ -37,6 +37,26 @@ Page({
   formatTime(timestamp) {
     if (!timestamp) return '';
     const date = new Date(timestamp);
+    const now = new Date();
+    const diff = now - date;
+    
+    // 今天内显示"x小时前"或"x分钟前"
+    if (diff < 60000) return '刚刚';
+    if (diff < 3600000) return `${Math.floor(diff / 60000)}分钟前`;
+    if (diff < 86400000 && date.getDate() === now.getDate()) {
+      return `${Math.floor(diff / 3600000)}小时前`;
+    }
+    
+    // 昨天
+    const yesterday = new Date(now);
+    yesterday.setDate(yesterday.getDate() - 1);
+    if (date.getDate() === yesterday.getDate() && date.getMonth() === yesterday.getMonth()) {
+      const hour = date.getHours().toString().padStart(2, '0');
+      const minute = date.getMinutes().toString().padStart(2, '0');
+      return `昨天 ${hour}:${minute}`;
+    }
+    
+    // 更早
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
     const hour = date.getHours().toString().padStart(2, '0');
@@ -54,17 +74,25 @@ Page({
     }
   },
 
+  // 跳转首页
+  goToHome() {
+    wx.switchTab({
+      url: '/pages/index/index'
+    });
+  },
+
   // 清空历史记录
   clearHistory() {
     wx.showModal({
       title: '确认清空',
       content: '确定要清空所有历史记录吗？此操作不可恢复。',
-      confirmColor: '#d32f2f',
+      confirmColor: '#c0392b',
       success: (res) => {
         if (res.confirm) {
           try {
             wx.removeStorageSync('task_history');
             this.setData({ history: [] });
+            wx.vibrateShort({ type: 'medium' });
             wx.showToast({ title: '已清空', icon: 'success' });
           } catch (e) {
             console.error('清空历史记录失败:', e);

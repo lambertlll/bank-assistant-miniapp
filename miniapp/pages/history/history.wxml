@@ -1,35 +1,76 @@
 <!--pages/history/history.wxml-->
-<!-- 银行业务助手 - 历史记录页 -->
-<view class="container">
-  <view class="card" wx:if="{{history.length === 0}}">
-    <view class="empty-state">
-      <view class="empty-icon">📭</view>
-      <view class="empty-text">暂无历史记录</view>
-      <view class="empty-hint">完成分析任务后，记录将显示在这里</view>
+<!-- 银行业务助手 - 历史记录页（时间线风格） -->
+<view class="container page-enter">
+  <!-- 空状态 -->
+  <view class="empty-card" wx:if="{{history.length === 0}}">
+    <view class="empty-illustration-wrap">
+      <view class="empty-doc">
+        <view class="empty-doc-fold"></view>
+        <view class="empty-doc-line l1"></view>
+        <view class="empty-doc-line l2"></view>
+        <view class="empty-doc-line l3"></view>
+      </view>
+      <view class="empty-clock">
+        <view class="empty-clock-hand h"></view>
+        <view class="empty-clock-hand m"></view>
+      </view>
     </view>
+    <view class="empty-text">暂无历史记录</view>
+    <view class="empty-hint">完成分析任务后，记录将显示在这里</view>
+    <button class="empty-action-btn" bindtap="goToHome">
+      <text>开始使用</text>
+    </button>
   </view>
 
-  <!-- 历史记录列表 -->
-  <view class="history-list" wx:else>
-    <view class="history-item card" wx:for="{{history}}" wx:key="taskId" bindtap="viewDetail" data-task-id="{{item.taskId}}">
-      <view class="history-header">
-        <view class="history-name">{{item.taskName}}</view>
-        <view class="history-status status-{{item.status}}">
-          {{item.status === 'completed' ? '已完成' : item.status === 'failed' ? '失败' : '处理中'}}
+  <!-- 历史记录列表 - 时间线样式 -->
+  <view class="history-timeline" wx:else>
+    <view class="timeline-header">
+      <view class="timeline-title">分析记录</view>
+      <view class="timeline-count">共 {{history.length}} 条</view>
+    </view>
+
+    <view class="timeline-list">
+      <view class="timeline-item" wx:for="{{history}}" wx:key="taskId" 
+            bindtap="viewDetail" data-task-id="{{item.taskId}}">
+        <!-- 时间线装饰 -->
+        <view class="timeline-track">
+          <view class="timeline-dot dot-{{item.status}}"></view>
+          <view class="timeline-line" wx:if="{{index < history.length - 1}}"></view>
+        </view>
+        
+        <!-- 内容卡片 -->
+        <view class="timeline-card">
+          <view class="timeline-card-header">
+            <view class="timeline-name">{{item.taskName}}</view>
+            <view class="timeline-status status-{{item.status}}">
+              <view class="status-dot"></view>
+              <text>{{item.status === 'completed' ? '已完成' : item.status === 'failed' ? '失败' : '处理中'}}</text>
+            </view>
+          </view>
+          <view class="timeline-card-meta">
+            <view class="meta-time">
+              <view class="meta-time-icon"></view>
+              <text>{{item.createTimeStr}}</text>
+            </view>
+            <view class="meta-type-badge">{{item.functionTypeStr}}</view>
+          </view>
+          <view class="timeline-preview" wx:if="{{item.preview}}">
+            {{item.preview}}
+          </view>
+          <view class="timeline-card-footer">
+            <text class="view-detail-text">查看详情</text>
+            <view class="view-detail-arrow"></view>
+          </view>
         </view>
       </view>
-      <view class="history-meta">
-        <text class="history-time">{{item.createTimeStr}}</text>
-        <text class="history-type">{{item.functionTypeStr}}</text>
-      </view>
-      <view class="history-preview" wx:if="{{item.preview}}">
-        {{item.preview}}
-      </view>
     </view>
-  </view>
 
-  <!-- 清空按钮 -->
-  <view class="clear-section" wx:if="{{history.length > 0}}">
-    <button class="button-clear" bindtap="clearHistory">清空历史记录</button>
+    <!-- 清空按钮 -->
+    <view class="clear-section">
+      <button class="clear-btn" bindtap="clearHistory">
+        <view class="clear-icon"></view>
+        <text>清空历史记录</text>
+      </button>
+    </view>
   </view>
 </view>
