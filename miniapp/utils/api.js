@@ -165,10 +165,27 @@ function getUsage() {
   });
 }
 
+/**
+ * 验证邀请码
+ */
+function verifyInviteCode(code) {
+  return requestWithRetry({
+    url: `${app.globalData.apiBaseUrl}/api/verify-code`,
+    method: 'POST',
+    data: { code },
+    header: {
+      'Content-Type': 'application/json'
+    }
+  }).then((res) => {
+    return res.data;
+  });
+}
+
 module.exports = {
   createTask,
   getTaskStatus,
   pollTask,
   getUsage,
+  verifyInviteCode,
   MAX_POLL_COUNT
 };

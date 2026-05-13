@@ -1,6 +1,87 @@
 /* pages/index/index.wxss */
 /* 银行业务助手首页样式 */
 
+/* 邀请码弹窗 */
+.invite-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.invite-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.invite-dialog {
+  position: relative;
+  width: 600rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 60rpx 40rpx;
+  text-align: center;
+  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.3);
+}
+
+.invite-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #1a3a5c;
+  margin-bottom: 16rpx;
+}
+
+.invite-subtitle {
+  font-size: 26rpx;
+  color: #8fa8c0;
+  margin-bottom: 40rpx;
+}
+
+.invite-input {
+  border: 2rpx solid #e8f0f8;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  font-size: 32rpx;
+  text-align: center;
+  letter-spacing: 8rpx;
+  background: #fafcfe;
+  margin-bottom: 20rpx;
+}
+
+.invite-error {
+  font-size: 24rpx;
+  color: #d32f2f;
+  margin-bottom: 20rpx;
+}
+
+.invite-btn {
+  background: linear-gradient(135deg, #1a3a5c 0%, #2d6aa0 100%);
+  color: #fff;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  font-size: 30rpx;
+  margin-bottom: 24rpx;
+  border: none;
+}
+
+.invite-btn:active {
+  opacity: 0.85;
+}
+
+.invite-hint {
+  font-size: 22rpx;
+  color: #b0c4d8;
+}
+
 /* 统计卡片 */
 .stats-card {
   background: linear-gradient(135deg, #1a3a5c 0%, #2d6aa0 100%);

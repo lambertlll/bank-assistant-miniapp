@@ -22,15 +22,61 @@ Page({
     progressMessage: '正在初始化...',
     pollCount: 0,
     maxPollCount: api.MAX_POLL_COUNT,
-    remainingTime: '约5分钟'
+    remainingTime: '约5分钟',
+    // 邀请码相关
+    showInviteModal: false,
+    inviteCode: '',
+    inviteError: '',
+    isVerified: false
   },
 
   onLoad() {
+    this.checkVerification();
     this.loadUsage();
   },
 
   onShow() {
+    this.checkVerification();
     this.loadUsage();
+  },
+
+  // 检查邀请码验证状态
+  checkVerification() {
+    const app = getApp();
+    if (app.globalData.isVerified) {
+      this.setData({ isVerified: true, showInviteModal: false });
+    } else {
+      this.setData({ isVerified: false, showInviteModal: true });
+    }
+  },
+
+  // 邀请码输入
+  onInviteCodeInput(e) {
+    this.setData({ inviteCode: e.detail.value, inviteError: '' });
+  },
+
+  // 验证邀请码
+  verifyInviteCode() {
+    const code = this.data.inviteCode.trim();
+    if (!code) {
+      this.setData({ inviteError: '请输入邀请码' });
+      return;
+    }
+
+    api.verifyInviteCode(code)
+      .then((res) => {
+        if (res.valid) {
+          const app = getApp();
+          app.setVerified();
+          this.setData({ isVerified: true, showInviteModal: false, inviteError: '' });
+          wx.showToast({ title: '验证成功', icon: 'success' });
+        } else {
+          this.setData({ inviteError: '邀请码无效，请重新输入' });
+        }
+      })
+      .catch((err) => {
+        this.setData({ inviteError: err.message || '验证失败，请重试' });
+      });
   },
 
   // 下拉刷新

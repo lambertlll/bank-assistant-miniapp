@@ -1,6 +1,21 @@
 <!--pages/index/index.wxml-->
 <!-- 银行业务助手首页 - 功能选择与任务提交 -->
 <view class="container">
+  <!-- 邀请码验证弹窗 -->
+  <view class="invite-modal" wx:if="{{showInviteModal}}">
+    <view class="invite-mask"></view>
+    <view class="invite-dialog">
+      <view class="invite-title">欢迎使用银行业务助手</view>
+      <view class="invite-subtitle">请输入邀请码以激活服务</view>
+      <input class="invite-input" placeholder="请输入邀请码" value="{{inviteCode}}" bindinput="onInviteCodeInput" password="{{false}}" />
+      <view class="invite-error" wx:if="{{inviteError}}">{{inviteError}}</view>
+      <button class="invite-btn" bindtap="verifyInviteCode">验证</button>
+      <view class="invite-hint">请联系管理员获取邀请码</view>
+    </view>
+  </view>
+
+  <!-- 主内容（验证通过后显示） -->
+  <view wx:if="{{isVerified}}">
   <!-- 顶部统计卡片 -->
   <view class="card stats-card">
     <view class="stats-header">
@@ -148,5 +163,6 @@
       <view class="quick-icon">📜</view>
       <view class="quick-text">历史记录</view>
     </view>
+  </view>
   </view>
 </view>
