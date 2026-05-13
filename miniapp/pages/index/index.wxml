@@ -1,0 +1,152 @@
+<!--pages/index/index.wxml-->
+<!-- 银行业务助手首页 - 功能选择与任务提交 -->
+<view class="container">
+  <!-- 顶部统计卡片 -->
+  <view class="card stats-card">
+    <view class="stats-header">
+      <view class="stats-title">今日使用情况</view>
+      <view class="stats-badge">{{usage.remaining}} 次可用</view>
+    </view>
+    <view class="stats-bar">
+      <view class="stats-bar-fill" style="width: {{usage.total > 0 ? (usage.used / usage.total * 100) : 0}}%"></view>
+    </view>
+    <view class="stats-detail">
+      <text class="stats-used">已使用 {{usage.used}} 次</text>
+      <text class="stats-total">总额度 {{usage.total}} 次</text>
+    </view>
+  </view>
+
+  <!-- 功能选择 - 横向网格布局 -->
+  <view class="card">
+    <view class="title">选择功能</view>
+    <view class="function-grid">
+      <view class="function-card {{selectedFunction === 'client-research' ? 'active' : ''}}" 
+            bindtap="selectFunction" data-function="client-research">
+        <view class="function-icon-wrapper">
+          <view class="function-icon">📋</view>
+        </view>
+        <view class="function-name">客户尽调</view>
+        <view class="function-desc">企业/个人背景调查</view>
+      </view>
+      
+      <view class="function-card {{selectedFunction === 'financial-report' ? 'active' : ''}}" 
+            bindtap="selectFunction" data-function="financial-report">
+        <view class="function-icon-wrapper">
+          <view class="function-icon">📊</view>
+        </view>
+        <view class="function-name">财报分析</view>
+        <view class="function-desc">上市公司财务分析</view>
+      </view>
+      
+      <view class="function-card {{selectedFunction === 'credit-committee' ? 'active' : ''}}" 
+            bindtap="selectFunction" data-function="credit-committee">
+        <view class="function-icon-wrapper">
+          <view class="function-icon">💼</view>
+        </view>
+        <view class="function-name">审贷会助手</view>
+        <view class="function-desc">审贷会准备材料</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 输入表单 -->
+  <view class="card" wx:if="{{selectedFunction}}">
+    <view class="title">输入信息</view>
+    
+    <!-- 客户尽调表单 -->
+    <view wx:if="{{selectedFunction === 'client-research'}}">
+      <view class="form-group">
+        <view class="form-label">客户名称</view>
+        <input class="form-input" placeholder="请输入客户名称" value="{{clientName}}" bindinput="onInputChange" data-field="clientName" />
+      </view>
+      <view class="form-group">
+        <view class="form-label">客户类型</view>
+        <radio-group bindchange="onRadioChange" data-field="clientType" class="radio-group">
+          <label class="radio-item {{clientType === 'enterprise' ? 'active' : ''}}">
+            <radio value="enterprise" checked="{{clientType === 'enterprise'}}" color="#1a3a5c" />
+            <text>企业客户</text>
+          </label>
+          <label class="radio-item {{clientType === 'individual' ? 'active' : ''}}">
+            <radio value="individual" checked="{{clientType === 'individual'}}" color="#1a3a5c" />
+            <text>个人客户</text>
+          </label>
+        </radio-group>
+      </view>
+    </view>
+    
+    <!-- 财报分析表单 -->
+    <view wx:if="{{selectedFunction === 'financial-report'}}">
+      <view class="form-group">
+        <view class="form-label">公司名称</view>
+        <input class="form-input" placeholder="请输入上市公司名称" value="{{companyName}}" bindinput="onInputChange" data-field="companyName" />
+      </view>
+      <view class="form-group">
+        <view class="form-label">报告类型</view>
+        <radio-group bindchange="onRadioChange" data-field="reportType" class="radio-group">
+          <label class="radio-item {{reportType === 'detailed' ? 'active' : ''}}">
+            <radio value="detailed" checked="{{reportType === 'detailed'}}" color="#1a3a5c" />
+            <text>详细版</text>
+          </label>
+          <label class="radio-item {{reportType === 'simple' ? 'active' : ''}}">
+            <radio value="simple" checked="{{reportType === 'simple'}}" color="#1a3a5c" />
+            <text>简化版</text>
+          </label>
+        </radio-group>
+      </view>
+    </view>
+    
+    <!-- 审贷会助手表单 -->
+    <view wx:if="{{selectedFunction === 'credit-committee'}}">
+      <view class="form-group">
+        <view class="form-label">公司名称</view>
+        <input class="form-input" placeholder="请输入公司名称" value="{{companyName}}" bindinput="onInputChange" data-field="companyName" />
+      </view>
+      <view class="form-group">
+        <view class="form-label">输出格式</view>
+        <radio-group bindchange="onRadioChange" data-field="outputFormat" class="radio-group">
+          <label class="radio-item {{outputFormat === 'word' ? 'active' : ''}}">
+            <radio value="word" checked="{{outputFormat === 'word'}}" color="#1a3a5c" />
+            <text>Word 格式</text>
+          </label>
+          <label class="radio-item {{outputFormat === 'text' ? 'active' : ''}}">
+            <radio value="text" checked="{{outputFormat === 'text'}}" color="#1a3a5c" />
+            <text>文本格式</text>
+          </label>
+        </radio-group>
+      </view>
+    </view>
+    
+    <button class="button-primary" bindtap="submit" disabled="{{loading}}">
+      {{loading ? '处理中...' : '开始分析'}}
+    </button>
+  </view>
+
+  <!-- 加载动画 -->
+  <view class="card" wx:if="{{loading}}">
+    <view class="loading-animation">
+      <view class="loading-spinner"></view>
+      <view class="loading-text">{{progressMessage}}</view>
+      <view class="loading-progress">{{pollCount}}/{{maxPollCount}} (预计{{remainingTime}})</view>
+      <view class="progress-bar">
+        <view class="progress-fill" style="width: {{pollCount / maxPollCount * 100}}%"></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 错误提示（含重试按钮） -->
+  <view class="error-card" wx:if="{{error}}">
+    <view class="error-content">
+      <view class="error-icon">⚠️</view>
+      <view class="error-text">{{error}}</view>
+    </view>
+    <button class="button-retry" bindtap="retrySubmit">重新尝试</button>
+  </view>
+
+  <!-- 快捷入口 -->
+  <view class="card quick-actions">
+    <view class="quick-action-item" bindtap="goToHistory">
+      <view class="quick-icon">📜</view>
+      <view class="quick-text">历史记录</view>
+    </view>
+  </view>
+</view>

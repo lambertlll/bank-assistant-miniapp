@@ -1,0 +1,130 @@
+/* pages/history/history.wxss */
+/* 银行业务助手 - 历史记录页样式 */
+
+.history-list {
+  padding-bottom: 120rpx;
+}
+
+.history-item {
+  padding: 28rpx 32rpx;
+  transition: all 0.2s;
+}
+
+.history-item:active {
+  background: #f8fafc;
+  transform: scale(0.99);
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.history-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1a3a5c;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.history-status {
+  font-size: 22rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 16rpx;
+  flex-shrink: 0;
+  margin-left: 16rpx;
+}
+
+.status-completed {
+  background: #e8f8e8;
+  color: #2e7d32;
+}
+
+.status-failed {
+  background: #fef0f0;
+  color: #d32f2f;
+}
+
+.status-processing {
+  background: #e8f4ff;
+  color: #1565c0;
+}
+
+.history-meta {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 12rpx;
+}
+
+.history-time {
+  font-size: 24rpx;
+  color: #8fa8c0;
+}
+
+.history-type {
+  font-size: 24rpx;
+  color: #5a7a9a;
+  background: #f0f4f8;
+  padding: 2rpx 12rpx;
+  border-radius: 6rpx;
+}
+
+.history-preview {
+  font-size: 24rpx;
+  color: #666;
+  line-height: 1.6;
+  padding: 12rpx 16rpx;
+  background: #fafcfe;
+  border-radius: 8rpx;
+  border-left: 4rpx solid #e8f0f8;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  padding: 80rpx 40rpx;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  margin-bottom: 24rpx;
+}
+
+.empty-text {
+  font-size: 32rpx;
+  color: #5a7a9a;
+  margin-bottom: 12rpx;
+}
+
+.empty-hint {
+  font-size: 26rpx;
+  color: #8fa8c0;
+}
+
+/* 清空按钮 */
+.clear-section {
+  padding: 32rpx;
+  text-align: center;
+}
+
+.button-clear {
+  background: transparent;
+  color: #8fa8c0;
+  font-size: 26rpx;
+  border: none;
+  padding: 16rpx;
+}
+
+.button-clear:active {
+  color: #d32f2f;
+}

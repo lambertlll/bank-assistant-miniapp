@@ -1,0 +1,35 @@
+<!--pages/history/history.wxml-->
+<!-- 银行业务助手 - 历史记录页 -->
+<view class="container">
+  <view class="card" wx:if="{{history.length === 0}}">
+    <view class="empty-state">
+      <view class="empty-icon">📭</view>
+      <view class="empty-text">暂无历史记录</view>
+      <view class="empty-hint">完成分析任务后，记录将显示在这里</view>
+    </view>
+  </view>
+
+  <!-- 历史记录列表 -->
+  <view class="history-list" wx:else>
+    <view class="history-item card" wx:for="{{history}}" wx:key="taskId" bindtap="viewDetail" data-task-id="{{item.taskId}}">
+      <view class="history-header">
+        <view class="history-name">{{item.taskName}}</view>
+        <view class="history-status status-{{item.status}}">
+          {{item.status === 'completed' ? '已完成' : item.status === 'failed' ? '失败' : '处理中'}}
+        </view>
+      </view>
+      <view class="history-meta">
+        <text class="history-time">{{item.createTimeStr}}</text>
+        <text class="history-type">{{item.functionTypeStr}}</text>
+      </view>
+      <view class="history-preview" wx:if="{{item.preview}}">
+        {{item.preview}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 清空按钮 -->
+  <view class="clear-section" wx:if="{{history.length > 0}}">
+    <button class="button-clear" bindtap="clearHistory">清空历史记录</button>
+  </view>
+</view>

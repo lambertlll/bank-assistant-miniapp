@@ -1,0 +1,59 @@
+<!--pages/result/result.wxml-->
+<!-- 银行业务助手 - 结果展示页（支持 Markdown 渲染） -->
+<view class="container">
+  <!-- 加载状态 -->
+  <view class="card" wx:if="{{loading}}">
+    <view class="loading-animation">
+      <view class="loading-spinner"></view>
+      <view class="loading-text">{{progressMessage}}</view>
+      <view class="loading-progress">{{pollCount}}/{{maxPollCount}}</view>
+      <view class="progress-bar">
+        <view class="progress-fill" style="width: {{pollCount / maxPollCount * 100}}%"></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 错误状态（含重试） -->
+  <view class="card" wx:elif="{{error}}">
+    <view class="error-section">
+      <view class="error-icon-large">⚠️</view>
+      <view class="error-message">{{error}}</view>
+      <button class="button-retry" bindtap="retryLoad">重新加载</button>
+    </view>
+  </view>
+
+  <!-- 结果内容 -->
+  <view wx:else>
+    <!-- 任务信息 -->
+    <view class="card result-header">
+      <view class="result-title">分析报告</view>
+      <view class="result-meta">
+        <text class="meta-item">任务ID: {{taskId}}</text>
+      </view>
+    </view>
+
+    <!-- Markdown 渲染内容 -->
+    <view class="card result-body">
+      <rich-text nodes="{{richNodes}}" wx:if="{{richNodes.length > 0}}"></rich-text>
+      <view wx:else class="plain-text">
+        <text>{{result}}</text>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="actions-bar">
+      <button class="action-btn copy-btn" bindtap="copyResult">
+        <text class="action-icon">📋</text>
+        <text>复制</text>
+      </button>
+      <button class="action-btn share-btn" open-type="share">
+        <text class="action-icon">📤</text>
+        <text>分享</text>
+      </button>
+      <button class="action-btn back-btn" bindtap="backToHome">
+        <text class="action-icon">🏠</text>
+        <text>首页</text>
+      </button>
+    </view>
+  </view>
+</view>
