@@ -32,7 +32,7 @@ Page({
     remainingTime: '约5分钟',
     currentStep: 0,
     // 邀请码相关
-    showInviteModal: false,
+    showInviteModal: true,
     inviteCode: '',
     inviteError: '',
     isVerified: false,
@@ -53,10 +53,15 @@ Page({
 
   // 检查邀请码验证状态
   checkVerification() {
-    const app = getApp();
-    if (app.globalData.isVerified) {
-      this.setData({ isVerified: true, showInviteModal: false });
-    } else {
+    try {
+      const app = getApp();
+      if (app && app.globalData && app.globalData.isVerified) {
+        this.setData({ isVerified: true, showInviteModal: false });
+      } else {
+        this.setData({ isVerified: false, showInviteModal: true });
+      }
+    } catch (e) {
+      console.error('检查验证状态失败:', e);
       this.setData({ isVerified: false, showInviteModal: true });
     }
   },
