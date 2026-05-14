@@ -13,7 +13,12 @@ Page({
     error: '',
     progressMessage: '正在加载结果...',
     pollCount: 0,
-    maxPollCount: api.MAX_POLL_COUNT
+    maxPollCount: api.MAX_POLL_COUNT,
+    // Word 文档相关
+    docxUrl: '',
+    docxFilename: '',
+    hasDocx: false,
+    downloading: false
   },
 
   onLoad(options) {
@@ -55,11 +60,20 @@ Page({
             const resultText = typeof task.data === 'string' ? task.data : JSON.stringify(task.data, null, 2);
             const richNodes = parseMarkdown(resultText);
 
-            this.setData({
+            const updateData = {
               loading: false,
               result: resultText,
               richNodes
-            });
+            };
+
+            // 检查是否有 Word 文档
+            if (task.docx && task.docx.url) {
+              updateData.hasDocx = true;
+              updateData.docxUrl = task.docx.url;
+              updateData.docxFilename = task.docx.filename || '报告.docx';
+            }
+
+            this.setData(updateData);
 
             // 成功震动反馈
             wx.vibrateShort({ type: 'medium' });
@@ -145,11 +159,45 @@ Page({
     wx.vibrateShort({ type: 'light' });
   },
 
+  // 导出 Word 文档
+  exportWord() {
+    if (!this.data.hasDocx) {
+      wx.showToast({ title: 'Word文档未生成', icon: 'none' });
+      return;
+    }
+
+    if (this.data.downloading) return;
+
+    this.setData({ downloading: true });
+    wx.vibrateShort({ type: 'light' });
+
+    wx.showLoading({ title: '正在下载...' });
+
+    api.downloadDocx(this.data.docxUrl, this.data.docxFilename)
+      .then((tempFilePath) => {
+        wx.hideLoading();
+        // 打开文档
+        return api.openDocx(tempFilePath);
+      })
+      .then(() => {
+        this.setData({ downloading: false });
+      })
+      .catch((err) => {
+        wx.hideLoading();
+        this.setData({ downloading: false });
+        wx.showToast({
+          title: err.message || '下载失败',
+          icon: 'none',
+          duration: 2000
+        });
+      });
+  },
+
   // 导出 PDF（预留功能）
   exportPDF() {
     wx.vibrateShort({ type: 'light' });
     wx.showToast({
-      title: '导出功能即将上线',
+      title: 'PDF导出功能即将上线',
       icon: 'none',
       duration: 2000
     });

@@ -298,6 +298,11 @@
   font-weight: 500;
 }
 
+.action-item.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
 /* ===== 错误卡片 ===== */
 .error-card-result {
   background: var(--color-card);

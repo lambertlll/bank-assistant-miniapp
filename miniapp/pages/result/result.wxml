@@ -101,11 +101,11 @@
           </view>
           <text class="action-label">分享</text>
         </view>
-        <view class="action-item" bindtap="exportPDF">
+        <view class="action-item {{hasDocx ? '' : 'disabled'}}" bindtap="exportWord">
           <view class="action-icon-wrap export-icon-wrap">
             <view class="export-icon-css"></view>
           </view>
-          <text class="action-label">导出</text>
+          <text class="action-label">{{downloading ? '下载中' : 'Word'}}</text>
         </view>
         <view class="action-item" bindtap="backToHome">
           <view class="action-icon-wrap home-icon-wrap">

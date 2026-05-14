@@ -181,11 +181,55 @@ function verifyInviteCode(code) {
   });
 }
 
+/**
+ * 下载 Word 文档
+ */
+function downloadDocx(downloadUrl, filename) {
+  return new Promise((resolve, reject) => {
+    const fullUrl = `${app.globalData.apiBaseUrl}${downloadUrl}`;
+    
+    wx.downloadFile({
+      url: fullUrl,
+      success: (res) => {
+        if (res.statusCode === 200) {
+          resolve(res.tempFilePath);
+        } else {
+          reject(new Error(`下载失败: ${res.statusCode}`));
+        }
+      },
+      fail: (err) => {
+        reject(new Error('下载失败，请检查网络'));
+      }
+    });
+  });
+}
+
+/**
+ * 打开 Word 文档
+ */
+function openDocx(filePath) {
+  return new Promise((resolve, reject) => {
+    wx.openDocument({
+      filePath: filePath,
+      fileType: 'docx',
+      showMenu: true,
+      success: () => {
+        resolve();
+      },
+      fail: (err) => {
+        reject(new Error('打开文档失败'));
+      }
+    });
+  });
+}
+
 module.exports = {
   createTask,
   getTaskStatus,
   pollTask,
   getUsage,
   verifyInviteCode,
+  downloadDocx,
+  openDocx,
   MAX_POLL_COUNT
 };
